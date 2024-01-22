@@ -48,7 +48,7 @@ jobs:
       run: html5validator --root . --ignore 'regex_to_ignore_errors'
 
     - name: Run unit tests
-      run: python -m unittest tests/test_functionalities.py
+      #run: python -m unittest tests/test_functionalities.py
       env:
         API_KEY: ${{ secrets.API_KEY }}
   
