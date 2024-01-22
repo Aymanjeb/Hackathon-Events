@@ -6,6 +6,7 @@ name = "pypi"
 [packages]
 flask = ">=2.2.2"
 requests = "*"
+pymongo = "*"
 
 [dev-packages]
 
