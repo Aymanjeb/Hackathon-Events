@@ -5,25 +5,14 @@ import requests
 
 
 app = Flask(__name__)
-client = MongoClient('mongodb+srv://Game_api:sI3vG3fOUjwDltxr@game.yik52gz.mongodb.net/Hackathon')
-users = client['users'] 
+client = MongoClient('mongodb+srv://Game_api:sI3vG3fOUjwDltxr@game.yik52gz.mongodb.net')
+db = client['Hackathon'] 
+users = db["users"]
 
 @app.route("/")
 def hello():
     return render_template('index.html')
 
-@app.route('/search', methods=['POST'])
-def search():
-    query = request.form['movieQuery']
-    movies = fetch_movies(query)
-    return render_template('results.html', movies=movies)
-
-def fetch_movies(query):
-    api_key = os.getenv('API_KEY')
-    url = f'https://api.themoviedb.org/3/search/movie?api_key={api_key}&query={query}'
-    response = requests.get(url)
-    data = response.json()
-    return data.get('results', [])
 
 @app.route('/login', methods=['GET','POST'])
 def login():
