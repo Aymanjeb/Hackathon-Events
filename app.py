@@ -6,9 +6,9 @@ import requests
 
 
 app = Flask(__name__)
-client = MongoClient('mongodb+srv://Game_api:sI3vG3fOUjwDltxr@game.yik52gz.mongodb.net')
-db = client['Hackathon'] 
-users = db["users"]
+client = MongoClient('mongodb+srv://Game_api:sI3vG3fOUjwDltxr@game.yik52gz.mongodb.net/Hackathon?retryWrites=true&w=majority&ssl=true')
+#db = client['Hackathon'] 
+users = client["users"]
 
 @app.route("/")
 def hello():
