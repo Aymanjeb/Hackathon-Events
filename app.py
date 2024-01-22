@@ -1,57 +1,67 @@
-from curses import flash
+from flask import Flask, render_template, url_for, request, session, redirect, flash
+from flask_pymongo import PyMongo
+import bcrypt
 import os
-from flask import Flask, render_template, request, redirect, url_for
-from pymongo import MongoClient
-import requests
-
 
 app = Flask(__name__)
-client = MongoClient('mongodb+srv://Game_api:sI3vG3fOUjwDltxr@game.yik52gz.mongodb.net/Hackathon?retryWrites=true&w=majority&ssl=true')
-#db = client['Hackathon'] 
-users = client["users"]
+app.config['SECRET_KEY'] = 'testing'
+
+app.config['MONGO_dbname'] = 'users'
+app.config['MONGO_URI'] = 'mongodb+srv://Game_api:sI3vG3fOUjwDltxr@game.yik52gz.mongodb.net/Hackathon'
+
+mongo = PyMongo(app)
 
 @app.route("/")
-def hello():
+@app.route("/main")
+def main():
     return render_template('index.html')
 
 
-@app.route('/login', methods=['GET','POST'])
-def login():
+@app.route("/register", methods=['POST', 'GET'])
+def signup():
     if request.method == 'POST':
-        user = request.form['username']
-        password = request.form['password']
-        user_data = users.find_one({'username': user, 'password': password})
-        if user_data:
-            return render_template('results.html')
-        else:
-            return render_template('login.html')
+        users = mongo.db.users
+        signup_user = users.find_one({'username': request.form['username']})
+
+        if signup:
+            flash(request.form['username'] + ' username is already exist')
+        return redirect(url_for('register'))
+
+        hashed = bcrypt.hashpw(request.form['password'].encode('utf-8'), bcrypt.gensalt(14))
+        users.insert({'username': request.form['username'], 'password': hashed, 'email': request.form['email']})
+        return redirect(url_for('signin'))
+
     return render_template('login.html')
 
-@app.route('/register', methods=['GET', 'POST'])
-def register():
+@app.route('/')
+def hello():
+    if 'username' in session:
+        return render_template('index.html', username=session['username'])
+
+    return render_template('index.html')
+
+@app.route('/login', methods=['GET', 'POST'])
+def signin():
     if request.method == 'POST':
-        username = request.form['username']
-        email = request.form['email']
-        password = request.form['password']
+        users = mongo.db.users
+        signin_user = users.find_one({'username': request.form['username']})
 
-        new_user = {
-            "username": username,
-            "email": email,
-            "password": password
-        }
+        if signin_user:
+            if bcrypt.hashpw(request.form['password'].encode('utf-8'), signin_user['password'].encode('utf-8')) == \
+                    signin_user['password'].encode('utf-8'):
+                session['username'] = request.form['username']
+                return redirect(url_for('index'))
 
-        users.insert_one(new_user)
+        flash('Username and password combination is wrong')
+        return render_template('login.html')
 
-        return redirect(url_for('login')) 
-    
-    return render_template('register.html')
+    return render_template('login.html')
 
-#define a logout function 
+
 @app.route('/logout')
 def logout():
-    requests.session.pop('logged_in', None)
-    flash("You were logged out", 'info')
-    return redirect(url_for('hello'))
+    session.pop('username', None)
+    return redirect(url_for('index'))
 
 
 if __name__ == "__main__":
