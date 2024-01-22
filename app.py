@@ -1,6 +1,7 @@
 from flask import Flask, render_template, url_for, request, session, redirect, flash
 from flask_pymongo import PyMongo
 import bcrypt
+import os
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'testing'
