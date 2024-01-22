@@ -1,3 +1,4 @@
+from curses import flash
 import os
 from flask import Flask, render_template, request, redirect, url_for
 from pymongo import MongoClient
@@ -44,6 +45,13 @@ def register():
         return redirect(url_for('login')) 
     
     return render_template('register.html')
+
+#define a logout function 
+@app.route('/logout')
+def logout():
+    requests.session.pop('logged_in', None)
+    flash("You were logged out", 'info')
+    return redirect(url_for('hello'))
 
 
 if __name__ == "__main__":
