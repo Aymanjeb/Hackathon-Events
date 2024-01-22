@@ -1,10 +1,11 @@
 import os
 from flask import Flask, render_template, request
-import requests 
-
-# text ext
+from pymongo import MongoClient
+import requests
 
 app = Flask(__name__)
+client = MongoClient('mongodb+srv://newData:test123@cluster0.43miro1.mongodb.net/hackathon')
+db = client['users'] 
 
 @app.route("/")
 def hello():
@@ -23,6 +24,16 @@ def fetch_movies(query):
     data = response.json()
     return data.get('results', [])
 
+@app.route('/login', methods=['POST'])
+def login():
+    user = request.form['username']
+    password = request.form['password']
+    users = db['users']
+    user_data = users.find_one({'username': user, 'password': password})
+    if user_data:
+        return render_template('results.html')
+    else:
+        return render_template('login.html')
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
