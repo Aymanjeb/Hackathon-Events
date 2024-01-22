@@ -1,3 +1,4 @@
+"""
 from curses import flash
 import os
 from flask import Flask, render_template, request, redirect, url_for
@@ -7,12 +8,12 @@ from flask_pymongo import PyMongo
 import bcrypt
 
 app = Flask(__name__)
-"""
+
 client = MongoClient('mongodb+srv://Game_api:sI3vG3fOUjwDltxr@game.yik52gz.mongodb.net/Hackathon?retryWrites=true&w=majority&ssl=true')
 #db = client['Hackathon'] 
 users = client["users"]
 
-"""
+
 app.config['SECRET_KEY'] = 'testing'
 
 app.config['MONGO_dbname'] = 'users'
@@ -67,3 +68,4 @@ def logout():
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
     app.run(host='0.0.0.0', port=port, debug=True)
+"""
