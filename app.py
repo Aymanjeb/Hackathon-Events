@@ -17,7 +17,7 @@ def hello():
 
 @app.route('/login', methods=['GET','POST'])
 def login():
-    client = MongoClient('mongodb+srv://Game_api:sI3vG3fOUjwDltxr@game.yik52gz.mongodb.net/?retryWrites=true&w=majority')
+    client = MongoClient('mongodb+srv://Game_api:sI3vG3fOUjwDltxr@game.yik52gz.mongodb.net/?retryWrites=true&w=majority&ssl=true')
     db = client['Hackathon'] 
     users = db["users"]
     if request.method == 'POST':
@@ -33,7 +33,7 @@ def login():
 @app.route('/register', methods=['GET', 'POST'])
 def register():
 
-    client = MongoClient('mongodb+srv://Game_api:sI3vG3fOUjwDltxr@game.yik52gz.mongodb.net/?retryWrites=true&w=majority')
+    client = MongoClient('mongodb+srv://Game_api:sI3vG3fOUjwDltxr@game.yik52gz.mongodb.net/?retryWrites=true&w=majority&ssl=true')
     try:
         client.admin.command('ping')
         print("Pinged your deployment. You successfully connected to MongoDB!")
