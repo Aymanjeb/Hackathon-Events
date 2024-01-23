@@ -1,14 +1,14 @@
 from curses import flash
 import os
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for, session
 from pymongo import MongoClient
 from flask_pymongo import PyMongo
 import requests
-
+import bcrypt
 
 app = Flask(__name__)
 app.config["MONGO_URI"] = os.getenv('SCALINGO_MONGO_URL')
-    
+
 mongo = PyMongo(app)
 
 
@@ -21,14 +21,16 @@ def hello():
 def login():
     if request.method == 'POST':
         users = mongo.db.users
-        user = request.form['username']
-        password = request.form['password']
-        user_data = users.find_one({'username': user, 'password': password})
-        if user_data:
-            return render_template('results.html')
-        else:
-            return render_template('login.html')
-        
+        login_user = users.find_one({'username': request.form['username']})
+
+        if login_user:
+            if bcrypt.checkpw(request.form['password'].encode('utf-8'), login_user['password']):
+                session['username'] = request.form['username']
+                return redirect(url_for('index'))
+
+        flash('Invalid username/password combination')
+        return redirect(url_for('login'))
+
     return render_template('login.html')
 
 @app.route('/register', methods=['GET', 'POST'])
@@ -36,30 +38,18 @@ def register():
 
     if request.method == 'POST':
         users = mongo.db.users
-        print(users)
-        username = request.form['username']
-        email = request.form['email']
-        password = request.form['password']
+        existing_user = users.find_one({'username': request.form['username']})
 
-        new_user = {
-            "username": username,
-            "email": email,
-            "password": password
-        }
+        if existing_user is None:
+            hashpass = bcrypt.hashpw(request.form['password'].encode('utf-8'), bcrypt.gensalt())
+            users.insert_one({'username': request.form['username'], 'password': hashpass})
+            session['username'] = request.form['username']
+            return redirect(url_for('index'))
 
-        users.insert_one(new_user)
+        flash('Username already exists')
+        return redirect(url_for('register'))
 
-        return redirect(url_for('login')) 
-    
     return render_template('register.html')
-
-#define a logout function 
-@app.route('/logout')
-def logout():
-    requests.session.pop('logged_in', None)
-    flash("You were logged out", 'info')
-    return redirect(url_for('hello'))
-
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
