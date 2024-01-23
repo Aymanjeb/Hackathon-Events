@@ -25,7 +25,7 @@ def login():
         if login_user:
             if login_user['password']==request.form['password']:
                 session['username'] = request.form['username']
-                return render_template('session.html')
+                return render_template('index.html')
 
         flash('Invalid Credentials')
         return redirect(url_for('login'))
@@ -45,10 +45,15 @@ def register():
             session['username'] = request.form['username']
             return render_template('index.html')
 
-        flash('Username already exists')
         return redirect(url_for('register'))
 
     return render_template('register.html')
+
+@app.route('/logout')
+def logout():
+    session.pop('username', None)
+    return render_template('index.html')
+
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))

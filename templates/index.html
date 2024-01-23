@@ -9,8 +9,16 @@
 </head>
 <body>
     <header>
+        {% if session.username %}
+        <button> Hello {{ session.username }} </button>
+        <button> Mes réservations </button>
+        <button> Réserver un nouvel évènement </button>
+        <button onclick="location.href='/logout'">Logout</button>
+        {% else %}
         <button onclick="location.href='/login'">Login</button>
         <button onclick="location.href='/register'">Register</button>
+        {% endif %}
+
     </header>
 
     <main>
