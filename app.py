@@ -1,9 +1,8 @@
 import os
 from flask import Flask, render_template, request, redirect, url_for, session, flash
-from pymongo import MongoClient
 from flask_pymongo import PyMongo
 import requests
-import bcrypt
+#import bcrypt
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = os.getenv('API_KEY')
