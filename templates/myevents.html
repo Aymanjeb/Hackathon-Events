@@ -1,0 +1,28 @@
+<head>
+    <title>Your Bookings</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container mt-4">
+        <h1 class="mb-3">Your Bookings</h1>
+        <div class="bookings-container">
+            {% for booking in bookings %}
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h2 class="card-title">{{ booking.event_id }} : {{booking.event_name}}</h2>
+                    {% if other_users_bookings[booking.event_id]!=[]%}
+                    <p class="card-text">Other Users who booked this event:</p>
+                    <ul class="list-group list-group-flush">
+                        {% for username in other_users_bookings[booking.event_id] %}
+                        <li class="list-group-item">{{ username }}</li>
+                        {% endfor %}
+                    </ul>
+                    {% endif %}
+                </div>
+            </div>
+            {% else %}
+            <p>No bookings found.</p>
+            {% endfor %}
+        </div>
+    </div>
+</body>

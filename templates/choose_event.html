@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Nantes Events</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <link rel="stylesheet" type="text/css" href="/static/css/index.css">
+
+</head>
+<header>
+    {% if session.username %}
+    <button> Hello {{ session.username }} </button>
+    <button onclick="location.href='/user_bookings'"> Mes réservations </button>
+    <button> Réserver un nouvel évènement </button>
+    <button onclick="location.href='/logout'">Logout</button>
+    {% else %}
+    <button onclick="location.href='/login'">Login</button>
+    <button onclick="location.href='/register'">Register</button>
+    {% endif %}
+
+</header>
+
+<body>
+    <div id="map" style="height: 650px; top: 200px;"></div>
+    
+    <script type="text/javascript">
+        var events = {{ events | tojson | safe }};
+        var map = L.map('map').setView([47.218371, -1.553621], 13); // Set to Nantes' coordinates
+        
+
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: '© OpenStreetMap contributors'
+        }).addTo(map);
+
+        // Assuming 'events' is passed from Flask containing the parsed event data
+        events.forEach(function(event) {
+            if (isValidCoordinate(event.lat, event.lon)){
+                var marker = L.marker([event.lat, event.lon]).addTo(map);
+                marker.bindPopup(displayInfo(event));   
+            }
+        });
+
+        function bookEvent(title) {
+            // Implement booking logic here
+            alert('Booking event: ' + title);
+        }
+        function isValidCoordinate(lat, lon) {
+        return !isNaN(lat) && lat >= -90 && lat <= 90 && lon!= null && lat!= null && !isNaN(lon) && lon >= -180 && lon <= 180;
+        }
+        function displayInfo(event) {
+            var infoContent = "<div><h3>" + event.nom + "</h3>"
+                            + "<p>" + event.description + "</p>"
+                            + "<h4>" + "Date : " + event.date + "</h4>" 
+
+                            + "<button onclick='bookEvent(\"" + event.id + "\", \"" + event.nom + "\")'>Book Event</button></div>";
+
+            return infoContent;
+        }
+
+        function bookEvent(eventId, eventName) {
+            console.log("description", event.description);
+            fetch('/book_event', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: 'event_id=' + encodeURIComponent(eventId) + '&event_name=' + encodeURIComponent(eventName)
+            })
+            .then(response => {
+                if (response.ok) {
+                    return response.text();
+                }
+                else if (response.status === 409){
+                    window.alert("Event already booked")
+                }
+                
+                else {
+                    throw new Error('Failed to book event');
+                }
+            })
+            .then(data => {
+                console.log(data); // Or update the UI accordingly
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        }
+    </script>
+</body>
+</html>
