@@ -44,24 +44,8 @@ jobs:
       #env:
        # API_KEY: ${{ secrets.API_KEY }}
   
-  create-pr:
-    needs: test
-    runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/Dev'
-    steps:
-      - uses: actions/checkout@v3
-      - name: Create Pull Request
-        uses: repo-sync/pull-request@v2
-        with:
-          github_token: ${{ secrets.PERSONAL_TOKEN }}
-          pr_title: "Merge Dev into Main"
-          pr_body: "This is an automated pull request to merge changes from the Dev branch into Main."
-          pr_label: "automerge"
-          source_branch: "Dev"
-          destination_branch: "main"
 
   force-merge:
-    needs: create-pr
     runs-on: ubuntu-latest
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     steps:
