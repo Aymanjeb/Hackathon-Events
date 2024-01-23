@@ -46,15 +46,20 @@ jobs:
   
 
   force-merge:
-    needs: test
-    runs-on: ubuntu-latest
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-    steps:
-      - name: Force Merge Dev into Main
-        run: |
-          git checkout main
-          git pull origin main  # Ensure main is up to date
-          git merge --strategy=ours Dev
-          git push origin main
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  needs: test
+  runs-on: ubuntu-latest
+  if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+  steps:
+    - name: Checkout Main
+      uses: actions/checkout@v2
+      with:
+        ref: 'main'  # Checkout the main branch
+
+    - name: Merge Dev into Main
+      run: |
+        git checkout main
+        git pull origin main  # Ensure main is up to date
+        git merge --strategy=ours Dev  # Merge Dev into Main, keeping Main's content
+        git push origin main
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
