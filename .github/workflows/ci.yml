@@ -38,8 +38,6 @@ jobs:
         flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
         # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
         flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
-      env:
-        API_KEY: ${{ secrets.API_KEY }}
 
     - name: Install html5validator
       run: pip install html5validator
@@ -49,8 +47,6 @@ jobs:
 
     #- name: Run unit tests
      # run: python -m unittest tests/test_functionalities.py
-      #env:
-       # API_KEY: ${{ secrets.API_KEY }}
   
   create-pr:
     needs: test
@@ -68,14 +64,16 @@ jobs:
           source_branch: "Dev"
           destination_branch: "main"
 
-      - name: Automerge
-        uses: pascalgn/automerge-action@v0.14.3
-        if: github.event_name == 'pull_request'
+  force-merge:
+    needs: create-pr
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    steps:
+      - name: Force Merge Dev into Main
+        run: |
+          git checkout main
+          git pull origin main  # Ensure main is up to date
+          git merge --strategy=ours Dev
+          git push origin main
         env:
-          GITHUB_TOKEN: "${{ secrets.PERSONAL_TOKEN }}"
-          MERGE_LABELS: "automerge,!work in progress,!blocked"
-          MERGE_METHOD: "merge" 
-          MERGE_COMMIT_MESSAGE: "pull-request-title"
-          MERGE_RETRIES: "6"
-          MERGE_RETRY_SLEEP: "5" 
-          MERGE_DELETE_BRANCH: "true"
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
