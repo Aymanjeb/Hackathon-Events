@@ -18,20 +18,20 @@ def main():
 
 
 @app.route("/register", methods=['POST', 'GET'])
-def signup():
+def register():
     if request.method == 'POST':
         users = mongo.db.users
         signup_user = users.find_one({'username': request.form['username']})
 
-        if signup:
+        if signup_user:
             flash(request.form['username'] + ' username is already exist')
-        return redirect(url_for('register'))
+            return redirect(url_for('register'))
 
         hashed = bcrypt.hashpw(request.form['password'].encode('utf-8'), bcrypt.gensalt(14))
         users.insert({'username': request.form['username'], 'password': hashed, 'email': request.form['email']})
-        return redirect(url_for('signin'))
+        return redirect(url_for('login'))
 
-    return render_template('login.html')
+    return render_template('register.html')
 
 @app.route('/')
 def hello():
@@ -41,7 +41,7 @@ def hello():
     return render_template('index.html')
 
 @app.route('/login', methods=['GET', 'POST'])
-def signin():
+def login():
     if request.method == 'POST':
         users = mongo.db.users
         signin_user = users.find_one({'username': request.form['username']})
