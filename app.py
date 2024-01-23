@@ -34,6 +34,12 @@ def login():
 def register():
 
     client = MongoClient('mongodb+srv://Game_api:sI3vG3fOUjwDltxr@game.yik52gz.mongodb.net/?retryWrites=true&w=majority')
+    try:
+        client.admin.command('ping')
+        print("Pinged your deployment. You successfully connected to MongoDB!")
+    except Exception as e:
+        print(e)
+
     db = client['Hackathon'] 
     users = db["users"]
     if request.method == 'POST':
