@@ -10,7 +10,7 @@
 <body>
     <header>
         {% if session.username %}
-        <button> Hello {{ session.username }} </button>
+        <span class="user-greeting"> You're logged in as {{ session.username }}</span>
         <button> Mes réservations </button>
         <button> Réserver un nouvel évènement </button>
         <button onclick="location.href='/logout'">Logout</button>
