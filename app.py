@@ -7,6 +7,7 @@ import requests
 import bcrypt
 
 app = Flask(__name__)
+app.config['SECRET_KEY'] = os.getenv('API_KEY')
 app.config["MONGO_URI"] = os.getenv('SCALINGO_MONGO_URL')
 
 mongo = PyMongo(app)
