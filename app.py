@@ -2,12 +2,14 @@ from curses import flash
 import os
 from flask import Flask, render_template, request, redirect, url_for
 from pymongo import MongoClient
+from flask_pymongo import PyMongo
 import requests
 
 
 app = Flask(__name__)
 
-
+app.config["MONGO_URI"] = "mongodb+srv://Game_api:sI3vG3fOUjwDltxr@game.yik52gz.mongodb.net/?retryWrites=true&w=majority&ssl=true"
+mongo = PyMongo(app)
 
 
 @app.route("/")
@@ -17,9 +19,7 @@ def hello():
 
 @app.route('/login', methods=['GET','POST'])
 def login():
-    client = MongoClient('mongodb+srv://Game_api:sI3vG3fOUjwDltxr@game.yik52gz.mongodb.net/?retryWrites=true&w=majority&ssl=true')
-    db = client['Hackathon'] 
-    users = db["users"]
+    users = mongo.Hackathon.users
     if request.method == 'POST':
         user = request.form['username']
         password = request.form['password']
@@ -32,16 +32,7 @@ def login():
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
-
-    client = MongoClient('mongodb+srv://Game_api:sI3vG3fOUjwDltxr@game.yik52gz.mongodb.net/?retryWrites=true&w=majority&ssl=true')
-    try:
-        client.admin.command('ping')
-        print("Pinged your deployment. You successfully connected to MongoDB!")
-    except Exception as e:
-        print(e)
-
-    db = client['Hackathon'] 
-    users = db["users"]
+    users = mongo.Hackathon.users
     if request.method == 'POST':
         username = request.form['username']
         email = request.form['email']
