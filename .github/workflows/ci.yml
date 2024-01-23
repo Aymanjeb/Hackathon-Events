@@ -67,7 +67,7 @@ jobs:
           pr_label: "automerge"
           source_branch: "Dev"
           destination_branch: "main"
-          
+
       - name: Automerge
         uses: pascalgn/automerge-action@v0.14.3
         if: github.event_name == 'pull_request'
@@ -77,5 +77,5 @@ jobs:
           MERGE_METHOD: "merge" 
           MERGE_COMMIT_MESSAGE: "pull-request-title"
           MERGE_RETRIES: "6"
-          MERGE_RETRY_SLEEP: "10000" 
+          MERGE_RETRY_SLEEP: "5" 
           MERGE_DELETE_BRANCH: "true"
