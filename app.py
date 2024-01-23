@@ -8,7 +8,7 @@ import requests
 
 app = Flask(__name__)
 
-app.config["MONGO_URI"] = "mongodb+srv://Game_api:sI3vG3fOUjwDltxr@game.yik52gz.mongodb.net/Hackathon"
+app.config["MONGO_URI"] = "mongodb+srv://Game_api:sI3vG3fOUjwDltxr@game.yik52gz.mongodb.net/Hackathon?retryWrites=true&w=majority&ssl=true"
 mongo = PyMongo(app)
 
 
@@ -21,7 +21,6 @@ def hello():
 def login():
     if request.method == 'POST':
         users = mongo.db.users
-        print(users)
         user = request.form['username']
         password = request.form['password']
         user_data = users.find_one({'username': user, 'password': password})
@@ -48,7 +47,7 @@ def register():
             "password": password
         }
 
-        users.insert(new_user)
+        users.insert_one(new_user)
 
         return redirect(url_for('login')) 
     
