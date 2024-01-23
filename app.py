@@ -1,67 +1,65 @@
-from flask import Flask, render_template, url_for, request, session, redirect, flash
-from flask_pymongo import PyMongo
-import bcrypt
+from curses import flash
 import os
+from flask import Flask, render_template, request, redirect, url_for
+from pymongo import MongoClient
+import requests
+
 
 app = Flask(__name__)
+
+client = MongoClient('mongodb+srv://Game_api:sI3vG3fOUjwDltxr@game.yik52gz.mongodb.net/?retryWrites=true&w=majority')
+db = client['Hackathon'] 
+users = db["users"]
+
+
 app.config['SECRET_KEY'] = 'testing'
 
 app.config['MONGO_dbname'] = 'users'
 app.config['MONGO_URI'] = 'mongodb+srv://Game_api:sI3vG3fOUjwDltxr@game.yik52gz.mongodb.net/Hackathon'
 
-mongo = PyMongo(app)
 
 @app.route("/")
-@app.route("/main")
-def main():
-    return render_template('index.html')
-
-
-@app.route("/register", methods=['POST', 'GET'])
-def register():
-    if request.method == 'POST':
-        users = mongo.db.users
-        signup_user = users.find_one({'username': request.form['username']})
-
-        if signup_user:
-            flash(request.form['username'] + ' username is already exist')
-            return redirect(url_for('register'))
-
-        hashed = bcrypt.hashpw(request.form['password'].encode('utf-8'), bcrypt.gensalt(14))
-        users.insert({'username': request.form['username'], 'password': hashed, 'email': request.form['email']})
-        return redirect(url_for('login'))
-
-    return render_template('register.html')
-
-@app.route('/')
 def hello():
-    if 'username' in session:
-        return render_template('index.html', username=session['username'])
-
     return render_template('index.html')
 
-@app.route('/login', methods=['GET', 'POST'])
+
+@app.route('/login', methods=['GET','POST'])
 def login():
     if request.method == 'POST':
-        users = mongo.db.users
-        signin_user = users.find_one({'username': request.form['username']})
-
-        if signin_user:
-            if bcrypt.hashpw(request.form['password'].encode('utf-8'), signin_user['password'].encode('utf-8')) == \
-                    signin_user['password'].encode('utf-8'):
-                session['username'] = request.form['username']
-                return redirect(url_for('index'))
-
-        flash('Username and password combination is wrong')
-        return render_template('login.html')
-
+        user = request.form['username']
+        password = request.form['password']
+        user_data = users.find_one({'username': user, 'password': password})
+        if user_data:
+            return render_template('results.html')
+        else:
+            return render_template('login.html')
     return render_template('login.html')
 
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+    if request.method == 'POST':
+        username = request.form['username']
+        email = request.form['email']
+        password = request.form['password']
 
+        new_user = {
+            "username": username,
+            "email": email,
+            "password": password
+        }
+
+        users.insert_one(new_user)
+
+        return redirect(url_for('login')) 
+    
+    return render_template('register.html')
+
+#define a logout function 
 @app.route('/logout')
 def logout():
-    session.pop('username', None)
-    return redirect(url_for('index'))
+    requests.session.pop('logged_in', None)
+    flash("You were logged out", 'info')
+    return redirect(url_for('hello'))
 
 
 if __name__ == "__main__":
