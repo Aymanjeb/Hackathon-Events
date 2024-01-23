@@ -26,7 +26,7 @@ def login():
         if login_user:
             if login_user['password']==request.form['password']:
                 session['username'] = request.form['username']
-                return redirect(url_for('index'))
+                return render_template('session.html')
 
         flash('Invalid username/password combination')
         return redirect(url_for('login'))
@@ -44,7 +44,7 @@ def register():
             #hashpass = bcrypt.hashpw(request.form['password'].encode('utf-8'), bcrypt.gensalt())
             users.insert_one({'username': request.form['username'], 'password': request.form['password']})
             session['username'] = request.form['username']
-            return redirect(url_for('index'))
+            return render_template('index.html')
 
         flash('Username already exists')
         return redirect(url_for('register'))
