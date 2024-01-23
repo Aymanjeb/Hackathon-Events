@@ -1,6 +1,5 @@
-from curses import flash
 import os
-from flask import Flask, render_template, request, redirect, url_for, session
+from flask import Flask, render_template, request, redirect, url_for, session, flash
 from pymongo import MongoClient
 from flask_pymongo import PyMongo
 import requests
