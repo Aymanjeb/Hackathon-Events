@@ -7,14 +7,6 @@ import requests
 
 app = Flask(__name__)
 
-client = MongoClient('mongodb+srv://Game_api:sI3vG3fOUjwDltxr@game.yik52gz.mongodb.net/?retryWrites=true&w=majority')
-db = client['Hackathon'] 
-users = db["users"]
-try:
-    client.admin.command('ping')
-    print("Pinged your deployment. You successfully connected to MongoDB!")
-except Exception as e:
-    print(e)
 
 
 
@@ -25,6 +17,9 @@ def hello():
 
 @app.route('/login', methods=['GET','POST'])
 def login():
+    client = MongoClient('mongodb+srv://Game_api:sI3vG3fOUjwDltxr@game.yik52gz.mongodb.net/?retryWrites=true&w=majority')
+    db = client['Hackathon'] 
+    users = db["users"]
     if request.method == 'POST':
         user = request.form['username']
         password = request.form['password']
@@ -37,6 +32,10 @@ def login():
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
+
+    client = MongoClient('mongodb+srv://Game_api:sI3vG3fOUjwDltxr@game.yik52gz.mongodb.net/?retryWrites=true&w=majority')
+    db = client['Hackathon'] 
+    users = db["users"]
     if request.method == 'POST':
         username = request.form['username']
         email = request.form['email']
