@@ -32,13 +32,11 @@ main {
     height: 70vh;
 }
 .user-greeting {
-    margin-right: 20px;
-    font-size: 1.2em;
-    padding: 10px 15px;
     background-color: #4CAF50;
     color: white;
-    border-radius: 5px;
+    padding: 10px 15px;
     border: none;
+    border-radius: 5px;
     cursor: pointer;
     margin-left: 10px;
 }
