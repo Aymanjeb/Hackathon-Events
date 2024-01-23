@@ -7,8 +7,8 @@ import requests
 
 
 app = Flask(__name__)
-app.config["MONGO_URI"] = "mongodb://aykill:123456789@6b9d25ac-cc65-4e9c-8b56-1ba40bdd6c13.hackathon-events-3530.mongo.a.osc-fr1.scalingo-dbs.com:34233/hackathon-events-3530?replicaSet=hackathon-events-3530-rs0&ssl=true"
-
+app.config["MONGO_URI"] = os.getenv('SCALINGO_MONGO_URL')
+    
 mongo = PyMongo(app)
 
 
