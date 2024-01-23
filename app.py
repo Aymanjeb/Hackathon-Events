@@ -19,21 +19,25 @@ def hello():
 
 @app.route('/login', methods=['GET','POST'])
 def login():
-    users = mongo.db.users
     if request.method == 'POST':
+        users = mongo.db.users
+        print(users)
         user = request.form['username']
         password = request.form['password']
-        user_data = users.find({'username': user, 'password': password})
+        user_data = users.find_one({'username': user, 'password': password})
         if user_data:
             return render_template('results.html')
         else:
             return render_template('login.html')
+        
     return render_template('login.html')
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
-    users = mongo.db.users
+
     if request.method == 'POST':
+        users = mongo.db.users
+        print(users)
         username = request.form['username']
         email = request.form['email']
         password = request.form['password']
@@ -44,7 +48,7 @@ def register():
             "password": password
         }
 
-        users.insert_one(new_user)
+        users.insert(new_user)
 
         return redirect(url_for('login')) 
     
