@@ -16,10 +16,6 @@ try:
 except Exception as e:
     print(e)
 
-app.config['SECRET_KEY'] = 'testing'
-
-app.config['MONGO_dbname'] = 'users'
-app.config['MONGO_URI'] = 'mongodb+srv://Game_api:sI3vG3fOUjwDltxr@game.yik52gz.mongodb.net/Hackathon'
 
 
 @app.route("/")
