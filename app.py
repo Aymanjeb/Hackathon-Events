@@ -27,7 +27,7 @@ def login():
                 session['username'] = request.form['username']
                 return render_template('session.html')
 
-        flash('Invalid username/password combination')
+        flash('Invalid Credentials')
         return redirect(url_for('login'))
 
     return render_template('login.html')
