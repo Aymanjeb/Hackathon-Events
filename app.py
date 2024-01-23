@@ -43,7 +43,7 @@ def register():
             #hashpass = bcrypt.hashpw(request.form['password'].encode('utf-8'), bcrypt.gensalt())
             users.insert_one({'username': request.form['username'], 'password': request.form['password']})
             session['username'] = request.form['username']
-            return render_template('index.html')
+            return redirect(url_for("choose_event"))
 
         return redirect(url_for('register'))
 
