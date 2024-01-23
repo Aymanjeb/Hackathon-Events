@@ -5,6 +5,13 @@
     <link rel="stylesheet" type="text/css" href="/static/css/login.css">
 </head>
 <body>
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+      <script>
+          alert('{{ messages[0] }}');
+      </script>
+    {% endif %}
+    {% endwith %}
     <div class="login-container">
         <h2>Login</h2>
         <form action="/login" method="post">

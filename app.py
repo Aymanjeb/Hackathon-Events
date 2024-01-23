@@ -1,9 +1,8 @@
 import os
 from flask import Flask, render_template, request, redirect, url_for, session, flash
-from pymongo import MongoClient
 from flask_pymongo import PyMongo
 import requests
-import bcrypt
+#import bcrypt
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = os.getenv('API_KEY')
@@ -26,9 +25,9 @@ def login():
         if login_user:
             if login_user['password']==request.form['password']:
                 session['username'] = request.form['username']
-                return redirect(url_for('index'))
+                return render_template('session.html')
 
-        flash('Invalid username/password combination')
+        flash('Invalid Credentials')
         return redirect(url_for('login'))
 
     return render_template('login.html')
@@ -44,7 +43,7 @@ def register():
             #hashpass = bcrypt.hashpw(request.form['password'].encode('utf-8'), bcrypt.gensalt())
             users.insert_one({'username': request.form['username'], 'password': request.form['password']})
             session['username'] = request.form['username']
-            return redirect(url_for('index'))
+            return render_template('index.html')
 
         flash('Username already exists')
         return redirect(url_for('register'))
