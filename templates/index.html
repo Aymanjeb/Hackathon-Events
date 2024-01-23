@@ -5,7 +5,31 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Your Page Title</title>
     <link rel="stylesheet" type="text/css" href="/static/css/index.css">
+    <script>
+        // Listen for messages from the iframe
+        window.addEventListener('message', function(event) {
+            // Make sure to check the origin of the data!
+            if (event.origin.startsWith("https://data.nantesmetropole.fr/explore/embed/dataset/244400404_agenda-evenements-nantes-nantes-metropole/map/?disjunctive.emetteur&disjunctive.rubrique&disjunctive.lieu&disjunctive.ville&disjunctive.lieu_quartier&location=8,47.15097,-0.3024&basemap=jawg.streets&static=false&datasetcard=false&scrollWheelZoom=true")) { // Replace with the iframe's domain
+                console.log('Received message:', event.data);
+                // Implement your logic to handle the received data
+                // For example, enabling the reservation button:
+                const reserveButton = document.getElementById('reserveButton');
+                reserveButton.disabled = false; // Enable the button
+                // You can also store the event data
+                reserveButton.dataset.eventData = JSON.stringify(event.data);
+            } else {
+                // Not from the expected origin, discard the message!
+                return;
+            }
+        });
 
+        function makeReservation() {
+            const reserveButton = document.getElementById('reserveButton');
+            const eventData = JSON.parse(reserveButton.dataset.eventData);
+            // Use this eventData to make a reservation through your API
+            // This might involve sending a POST request to your server
+        }
+    </script>
 </head>
 <body>
     <header>
@@ -18,17 +42,17 @@
         <button onclick="location.href='/login'">Login</button>
         <button onclick="location.href='/register'">Register</button>
         {% endif %}
-
+        <button id="reserveButton" onclick="makeReservation()" disabled>Make a Reservation</button>
     </header>
 
     <main>
-        <iframe src="https://data.nantesmetropole.fr/explore/embed/dataset/244400404_agenda-evenements-nantes-nantes-metropole/map/?disjunctive.emetteur&disjunctive.rubrique&disjunctive.lieu&disjunctive.ville&disjunctive.lieu_quartier&location=8,47.15097,-0.3024&basemap=jawg.streets&static=false&datasetcard=false&scrollWheelZoom=true" width="800" height="600"></iframe>  
-        
+        <iframe src="https://data.nantesmetropole.fr/explore/embed/dataset/244400404_agenda-evenements-nantes-nantes-metropole/map/?disjunctive.emetteur&disjunctive.rubrique&disjunctive.lieu&disjunctive.ville&disjunctive.lieu_quartier&location=8,47.15097,-0.3024&basemap=jawg.streets&static=false&datasetcard=false&scrollWheelZoom=true" width="800" height="600" id="mapIframe"></iframe>  
+    </main>
+
     <footer>
         <h3>Contact Us</h3>
         <p>Email: your.email@example.com</p>
         <p>Phone: +1 234 567 890</p>
     </footer>
-    </main>
 </body>
 </html>
