@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Include Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <!-- Your existing CSS links -->
+    <title>Details</title>
+    <link rel="stylesheet" type="text/css" href="/static/css/event_details.css">
+
+
+</head>
+<header class="navbar navbar-expand-lg navbar-light bg-light">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container">
+            <a class="navbar-brand">
+                <img src="/static/images/lions.png" width="30" height="30" alt="Logo"> Atlas Lions
+            </a>
+            
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ml-auto">
+                    {% if session.username %}
+                    <!-- User is logged in -->
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">Acceuil</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/user_bookings">Mes réservations</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/book">Réserver un nouvel évènement</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/logout">Déconnexion</a>
+                    </li>
+                    {% else %}
+                    <!-- User is not logged in -->
+                    <li class="nav-item">
+                        <a class="nav-link" href="/login">Connexion</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/register">Inscription</a>
+                    </li>
+                    {% endif %}
+                </ul>
+            </div>
+            
+        </div>
+    </nav>
+</header>
+
+<body>
+    <div class="container">
+        <h2>Informations sur l'évènement</h2>
+
+
+        <div id="mapid" style="height: 400px;"></div>
+    </div>
+    <table class="table event-details-table">
+        <tr><th>Name</th><td>{{ event['nom'] }}</td></tr>
+        <tr><th>Description</th><td>{{ event['description'] }}</td></tr>
+        <tr><th>Date</th><td>{{ event['date'] }}</td></tr>
+        <tr><th>Heure début</th><td>{{ event['heure_debut'] }}</td></tr>
+        <tr><th>Heure fin</th><td>{{ event['heure_fin'] }}</td></tr>
+        {% if event['lieu_siteweb']!="" %}
+        <tr><th>SiteWeb</th><td>{{ event['website'] }}</td></tr>
+        {% endif %}
+       
+    </table>
+    
+    
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <script>
+        var mymap = L.map('mapid').setView([{{ event['lat'] }}, {{ event['lon'] }}], 13);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: '© OpenStreetMap contributors'
+        }).addTo(mymap);
+
+        var marker = L.marker([{{ event['lat'] }}, {{ event['lon'] }}]).addTo(mymap);
+        marker.bindPopup("<b>{{ event['nom'] }}</b>").openPopup();
+    </script>
+</body>
+</html>
