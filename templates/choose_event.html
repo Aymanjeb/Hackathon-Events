@@ -4,89 +4,125 @@
     <title>Nantes Events</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
-    <link rel="stylesheet" type="text/css" href="/static/css/index.css">
+    <link rel="stylesheet" type="text/css" href="/static/css/choose_event.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Page Title</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+
 
 </head>
-<header>
-    {% if session.username %}
-    <button> Hello {{ session.username }} </button>
-    <button onclick="location.href='/user_bookings'"> Mes réservations </button>
-    <button> Réserver un nouvel évènement </button>
-    <button onclick="location.href='/logout'">Logout</button>
-    {% else %}
-    <button onclick="location.href='/login'">Login</button>
-    <button onclick="location.href='/register'">Register</button>
-    {% endif %}
+<header class="navbar navbar-expand-lg navbar-light bg-light">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container">
+            <a class="navbar-brand">
+                <img src="static/images/lions.png" width="45" height="45" alt="Logo"> Atlas Lions
+            </a>
+            
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ml-auto">
+                    {% if session.username %}
+                    <!-- User is logged in -->
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">Acceuil</a>
 
+                    <li class="nav-item">
+                        <a class="nav-link" href="/user_bookings">Mes réservations</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/book">Réserver un nouvel évènement</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/logout">Déconnexion</a>
+                    </li>
+                    {% else %}
+                    <!-- User is not logged in -->
+                    <li class="nav-item">
+                        <a class="nav-link" href="/login">Connexion</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/register">Inscription</a>
+                    </li>
+                    {% endif %}
+                </ul>
+            </div>
+            
+        </div>
+    </nav>
 </header>
 
 <body>
-    <div id="map" style="height: 650px; top: 200px;"></div>
+    <div id="map" style="height: 800px; top: 10px;"></div>
     
-    <script type="text/javascript">
-        var events = {{ events | tojson | safe }};
-        var map = L.map('map').setView([47.218371, -1.553621], 13); // Set to Nantes' coordinates
-        
-
-
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            maxZoom: 19,
-            attribution: '© OpenStreetMap contributors'
-        }).addTo(map);
-
-        // Assuming 'events' is passed from Flask containing the parsed event data
-        events.forEach(function(event) {
-            if (isValidCoordinate(event.lat, event.lon)){
-                var marker = L.marker([event.lat, event.lon]).addTo(map);
-                marker.bindPopup(displayInfo(event));   
-            }
-        });
-
-        function bookEvent(title) {
-            // Implement booking logic here
-            alert('Booking event: ' + title);
-        }
-        function isValidCoordinate(lat, lon) {
-        return !isNaN(lat) && lat >= -90 && lat <= 90 && lon!= null && lat!= null && !isNaN(lon) && lon >= -180 && lon <= 180;
-        }
-        function displayInfo(event) {
-            var infoContent = "<div><h3>" + event.nom + "</h3>"
-                            + "<p>" + event.description + "</p>"
-                            + "<h4>" + "Date : " + event.date + "</h4>" 
-
-                            + "<button onclick='bookEvent(\"" + event.id + "\", \"" + event.nom + "\")'>Book Event</button></div>";
-
-            return infoContent;
-        }
-
-        function bookEvent(eventId, eventName) {
-            console.log("description", event.description);
-            fetch('/book_event', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                },
-                body: 'event_id=' + encodeURIComponent(eventId) + '&event_name=' + encodeURIComponent(eventName)
-            })
-            .then(response => {
-                if (response.ok) {
-                    return response.text();
-                }
-                else if (response.status === 409){
-                    window.alert("Event already booked")
-                }
-                
-                else {
-                    throw new Error('Failed to book event');
-                }
-            })
-            .then(data => {
-                console.log(data); // Or update the UI accordingly
-            })
-            .catch(error => {
-                console.error('Error:', error);
-            });
-        }
-    </script>
 </body>
 </html>
+
+
+<script type="text/javascript">
+    var events = {{ events | tojson | safe }};
+    var map = L.map('map').setView([47.218371, -1.553621], 13); // Set to Nantes' coordinates
+    
+
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+        attribution: '© OpenStreetMap contributors'
+    }).addTo(map);
+
+    // Assuming 'events' is passed from Flask containing the parsed event data
+    events.forEach(function(event) {
+        if (isValidCoordinate(event.lat, event.lon)){
+            var marker = L.marker([event.lat, event.lon]).addTo(map);
+            marker.bindPopup(displayInfo(event));   
+        }
+    });
+
+    function bookEvent(title) {
+        // Implement booking logic here
+        alert('Booking event: ' + title);
+    }
+    function isValidCoordinate(lat, lon) {
+    return !isNaN(lat) && lat >= -90 && lat <= 90 && lon!= null && lat!= null && !isNaN(lon) && lon >= -180 && lon <= 180;
+    }
+    function displayInfo(event) {
+        var infoContent = "<div><h3>" + event.nom + "</h3>"
+                        + "<p>" + event.description + "</p>"
+                        + "<h4>" + "Date : " + event.date + "</h4>" 
+
+                        + "<button onclick='bookEvent(\"" + event.id + "\", \"" + event.nom + "\")'>Book Event</button></div>";
+
+        return infoContent;
+    }
+
+    function bookEvent(eventId, eventName) {
+        console.log("description", event.description);
+        fetch('/book_event', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: 'event_id=' + encodeURIComponent(eventId) + '&event_name=' + encodeURIComponent(eventName)
+        })
+        .then(response => {
+            if (response.ok) {
+                return response.text();
+            }
+            else if (response.status === 409){
+                window.alert("Event already booked")
+            }
+            
+            else {
+                throw new Error('Failed to book event');
+            }
+        })
+        .then(data => {
+            console.log(data); // Or update the UI accordingly
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+    }
+</script>

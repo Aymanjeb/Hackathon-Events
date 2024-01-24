@@ -1,31 +1,77 @@
-<!DOCTYPE html>
 <head>
-    <title>Your Bookings</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mes réservations</title>
 </head>
 <body>
+    <header class="navbar navbar-expand-lg navbar-light bg-light">
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <div class="container">
+                <a class="navbar-brand">
+                    <img src="static/images/lions.png" width="30" height="30" alt="Logo"> Atlas Lions
+                </a>
+                
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav ml-auto">
+                        {% if session.username %}
+                        <!-- User is logged in -->
+                        <li class="nav-item">
+                            <a class="nav-link" href="/">Acceuil</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/user_bookings">Mes réservations</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/book">Réserver un nouvel évènement</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/logout">Déconnexion</a>
+                        </li>
+                        {% else %}
+                        <!-- User is not logged in -->
+                        <li class="nav-item">
+                            <a class="nav-link" href="/login">Connexion</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/register">Inscription</a>
+                        </li>
+                        {% endif %}
+                    </ul>
+                </div>
+                
+            </div>
+        </nav>
+    </header>
+
     <div class="container mt-4">
-        <h1 class="mb-3">Your Bookings</h1>
+        <h1 class="mb-3">Mes réservations</h1>
         <div class="bookings-container">
             {% for booking in bookings %}
             <div class="card mb-3">
                 <div class="card-body">
-                    <h2 class="card-title">{{ booking.event_id }} : {{booking.event_name}}</h2>
+                    <h2 class="card-title">{{ booking.event_id }} : {{booking.event_name}}
+                        <a href="/delete/{{ booking.event_id }}" class="btn btn-danger btn-sm float-right">
+                            <i class="fas fa-trash-alt"></i>
+                        </a>
+                    </h2>
                     {% if other_users_bookings[booking.event_id]!=[]%}
-                    <p class="card-text">Other Users who booked this event:</p>
+                    <p class="card-text">D'autres utilisateurs qui ont réservé le même évènement:</p>
                     <ul class="list-group list-group-flush">
-                        {% for username in other_users_bookings[booking.event_id] %}
-                        <li class="list-group-item">{{ username }}</li>
+                        {% for list in other_users_bookings[booking.event_id] %}
+                        <li class="list-group-item">{{ list[0] }}: {{list[1]}}</li>
                         {% endfor %}
                     </ul>
                     {% endif %}
                 </div>
             </div>
             {% else %}
-            <p>No bookings found.</p>
+            <p>Aucune réservation trouvée.</p>
             {% endfor %}
         </div>
     </div>
 </body>
-
-</html>
