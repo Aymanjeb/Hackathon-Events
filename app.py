@@ -25,7 +25,9 @@ def login():
         if login_user:
             if login_user['password']==request.form['password']:
                 session['username'] = request.form['username']
-                return redirect(url_for("choose_event"))
+                session['email'] = login_user['email']
+
+                return redirect(url_for("hello"))
             
         flash('Invalid Credentials')
         return redirect(url_for('login'))
@@ -43,9 +45,10 @@ def register():
             #hashpass = bcrypt.hashpw(request.form['password'].encode('utf-8'), bcrypt.gensalt())
             users.insert_one({'username': request.form['username'], 'password': request.form['password']})
             session['username'] = request.form['username']
-            return redirect(url_for("choose_event"))
+            session['email'] = request.form['email']
+            return render_template('index.html')
 
-        return redirect(url_for('register'))
+        return redirect(url_for('choose_event'))
 
     return render_template('register.html')
 
@@ -57,8 +60,10 @@ def logout():
 
 @app.route("/book")
 def choose_event():
-    events = fetch_events()
-    return render_template('choose_event.html', events=events)
+    if 'username' in session:
+        events = fetch_events()
+        return render_template('choose_event.html', events=events)
+
 
 
 def fetch_events():
@@ -88,7 +93,9 @@ def fetch_events():
 
 @app.route('/book_event', methods=['POST'])
 def book_event():
+
     username = session['username']  
+    email = session['email']
     event_id = request.form.get('event_id')
     event_name = request.form.get('event_name')
     existing_booking = mongo.db.booked_events.find_one({"username": username, "event_id": event_id, "event_name": event_name})
@@ -100,6 +107,7 @@ def book_event():
 
     booked_event = {
         "username": username,
+        "email": email,
         "event_id": event_id,
         "event_name": event_name
     }
@@ -120,11 +128,29 @@ def user_bookings():
     other_users_bookings = {}
     for event_id in event_ids:
         other_users = mongo.db.booked_events.find({'event_id': event_id, 'username': {'$ne': username}})
-        other_users_bookings[event_id] = [user['username'] for user in other_users]
+        other_users_bookings[event_id] = [[user['username'], user['email']] for user in other_users]
     bookings = mongo.db.booked_events.find({'username': username})
 
     return render_template('myevents.html', bookings=list(bookings), other_users_bookings=other_users_bookings)
 
+
+@app.route('/delete/<int:event_id>')
+def delete_event(event_id):
+    username = session['username']
+
+    if not username:
+        return "User not logged in", 401
+
+    if not event_id:
+        return "Event ID is required", 400
+
+    # Check if the booking exists
+    existing_booking = mongo.db.booked_events.find_one({"username": username, "event_id": str(event_id)})
+    if not existing_booking:
+        return "Booking not found", 404
+
+    mongo.db.booked_events.delete_one({"username": username, "event_id": str(event_id)})
+    return redirect(url_for('user_bookings'))
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
