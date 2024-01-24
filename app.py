@@ -152,6 +152,39 @@ def delete_event(event_id):
     mongo.db.booked_events.delete_one({"username": username, "event_id": str(event_id)})
     return redirect(url_for('user_bookings'))
 
+@app.route('/event_details/<int:event_id>')
+def event_details(event_id):
+    event = get_event_details(event_id)
+    if event:
+        return render_template('event_details.html', event=event)
+    else:
+        return "Event not found", 404
+def get_event_details(event_id):
+
+    url = "https://data.nantesmetropole.fr/api/explore/v2.1/catalog/datasets/244400404_agenda-evenements-nantes-nantes-metropole/records"
+    params = {
+        'limit': 100
+    }
+    response = requests.get(url, params=params)
+    if response.status_code == 200:
+        events = response.json().get('results')
+        for event in events:
+            if event['id_manif']==str(event_id):
+                details = {
+                    'lat': event['latitude'],
+                    'lon': event['longitude'],
+                    'nom': event['nom'],
+                    'description': event['description'],
+                    'id': event['id_manif'],
+                    'date' : event['date'],
+                    'heure_debut' : event['heure_debut'],
+                    'heure_fin' : event['heure_fin'],
+                    'website' : event['lieu_siteweb']
+                }
+                return details
+
+
+
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
     app.run(host='0.0.0.0', port=port, debug=True)
