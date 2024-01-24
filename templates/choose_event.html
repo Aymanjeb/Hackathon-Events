@@ -24,7 +24,7 @@
     <div id="map" style="height: 650px; top: 200px;"></div>
     
     <script type="text/javascript">
-        var events = {{ events | tojson | safe }};
+        var events = JSON.parse('{{ events | tojson | safe }}');
         var map = L.map('map').setView([47.218371, -1.553621], 13); // Set to Nantes' coordinates
         
 
