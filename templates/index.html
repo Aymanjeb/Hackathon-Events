@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bienvenue au Hackathon-Events par Atlas Lions</title>
+    <title>Welcome to Hackathon-Events by Atlas Lions</title>
     <link rel="stylesheet" type="text/css" href="/static/css/index.css">
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
 </head>
@@ -21,6 +21,7 @@
                 <div class="collapse navbar-collapse" id="navbarNav">
                     <ul class="navbar-nav ml-auto">
                         {% if session.username %}
+                        <!-- User is logged in -->
                         <li class="nav-item">
                             <a class="nav-link" href="/user_bookings">Mes réservations</a>
                         </li>
@@ -34,6 +35,7 @@
                             <a class="nav-link" href="/logout">Déconnexion</a>
                         </li>
                         {% else %}
+                        <!-- User is not logged in -->
                         <li class="nav-item">
                             <a class="nav-link" href="/login">Connexion</a>
                         </li>
@@ -54,7 +56,7 @@
 
     <footer class="footer bg-dark text-white mt-4">
         <div class="container text-center">
-            <h3>Bienvenue Dans Notre Site</h3>
+            <h3>Bienvenu Dans Notre Site</h3>
             <p>Explorez Nantes en toute simplicité grâce à notre site dédié aux étudiants.</p>
             <p>Coordonnez-vous, restez informé et profitez au maximum des événements de la ville.</p>
             <p>Votre hub pour une vie étudiante connectée et enrichie à Nantes.</p> 
@@ -62,5 +64,6 @@
     </footer>
 
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <!-- Add your JavaScript here -->
 </body>
 </html>

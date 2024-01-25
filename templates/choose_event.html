@@ -1,12 +1,13 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Evénement à Nantes</title>
+    <title>Nantes Events</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
     <link rel="stylesheet" type="text/css" href="/static/css/choose_event.css">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Page Title</title>
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
 
 
@@ -24,6 +25,7 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ml-auto">
                     {% if session.username %}
+                    <!-- User is logged in -->
                     <li class="nav-item">
                         <a class="nav-link" href="/">Accueil</a>
                     </li>
@@ -37,6 +39,7 @@
                         <a class="nav-link" href="/logout">Déconnexion</a>
                     </li>
                     {% else %}
+                    <!-- User is not logged in -->
                     <li class="nav-item">
                         <a class="nav-link" href="/login">Connexion</a>
                     </li>
@@ -60,7 +63,7 @@
 
 <script type="text/javascript">
     var events = {{ events | tojson | safe }};
-    var map = L.map('map').setView([47.218371, -1.553621], 13);
+    var map = L.map('map').setView([47.218371, -1.553621], 13); // Set to Nantes' coordinates
     
 
 
@@ -69,6 +72,7 @@
         attribution: '© OpenStreetMap contributors'
     }).addTo(map);
 
+    // Assuming 'events' is passed from Flask containing the parsed event data
     events.forEach(function(event) {
         if (isValidCoordinate(event.lat, event.lon)){
             var marker = L.marker([event.lat, event.lon]).addTo(map);
@@ -77,6 +81,7 @@
     });
 
     function bookEvent(title) {
+        // Implement booking logic here
         alert('Booking event: ' + title);
     }
     function isValidCoordinate(lat, lon) {
