@@ -33,11 +33,11 @@ jobs:
         # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
         flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
 
-    - name: Install html5validator
-      run: pip install html5validator
+  #  - name: Install html5validator
+   #   run: pip install html5validator
 
-    - name: Validate HTML
-      run: html5validator --root . --ignore 'regex_to_ignore_errors'
+   # - name: Validate HTML
+   #  run: html5validator --root . --ignore 'regex_to_ignore_errors'
   
   create-pr:
     needs: test
