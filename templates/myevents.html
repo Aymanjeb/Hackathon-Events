@@ -52,11 +52,11 @@
             {% for booking in bookings %}
             <div class="card mb-3">
                 <div class="card-body">
-                    <h2 class="card-title">{{ booking.event_id }} : {{booking.event_name}}
-                        <a href="/event_details/{{booking.event_id}}" class="btn btn-info btn-sm float-right">
+                    <h2 class="card-title">{{ booking.event_date }} : {{booking.event_name}}
+                        <a href="/event_details/{{booking.event_date}}" class="btn btn-info btn-sm float-right">
                             <i class="fas fa-info-circle"></i>
                         </a>
-                        <a href="/delete/{{ booking.event_id }}" class="btn btn-danger btn-sm float-right">
+                        <a href="/delete/{{ booking.event_date }}" class="btn btn-danger btn-sm float-right">
                             <i class="fas fa-trash-alt"></i>
                         </a>
                     </h2>
