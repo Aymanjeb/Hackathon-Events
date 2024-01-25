@@ -6,6 +6,13 @@
 
 </head>
 <body>
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+      <script>
+          alert('{{ messages[0] }}');
+      </script>
+    {% endif %}
+    {% endwith %}
     <div class="register-container">
         <h2>Inscription</h2>
         <form action="/register" method="post">
@@ -21,6 +28,17 @@
                 <label for="password">Mot de passe</label>
                 <input type="password" id="password" name="password" required>
             </div>
+            <br>
+            <div class="form-group">
+                <label for="carOwner">Possédez-vous une voiture et souhaitez-vous être contacté par une personne intéressée par le covoiturage ?</label>
+                <select id="carOwner" name="carOwner">
+                    <option value="">Choisir...</option>
+                    <option value="yes">Oui</option>
+                    <option value="no">Non</option>
+                </select>
+            </div>
+            <br>
+
             <div class="form-group">
                 <input type="submit" value="Register">
             </div>

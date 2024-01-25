@@ -26,6 +26,7 @@ def login():
             if login_user['password']==request.form['password']:
                 session['username'] = request.form['username']
                 session['email'] = login_user['email']
+                session['carowner'] = login_user['carowner']
 
                 return redirect(url_for("hello"))
             
@@ -47,6 +48,7 @@ def register():
             users.insert_one({'username': request.form['username'], 'password': hashed_password, 'email': request.form['email']})
             session['username'] = request.form['username']
             session['email'] = request.form['email']
+            session['carowner'] = request.form['carowner']
             return render_template('index.html')
 
         return redirect(url_for('choose_event'))
@@ -118,9 +120,9 @@ def fetch_events():
 
 @app.route('/book_event', methods=['POST'])
 def book_event():
-
     username = session['username']  
     email = session['email']
+    carowner = session['carowner']
     event_id = request.form.get('event_id')
     event_name = request.form.get('event_name')
     existing_booking = mongo.db.booked_events.find_one({"username": username, "event_id": event_id, "event_name": event_name})
@@ -134,7 +136,8 @@ def book_event():
         "username": username,
         "email": email,
         "event_id": event_id,
-        "event_name": event_name
+        "event_name": event_name,
+        "carowner": carowner
     }
 
     mongo.db.booked_events.insert_one(booked_event)
@@ -154,7 +157,7 @@ def user_bookings():
     other_users_bookings = {}
     for event_id in event_ids:
         other_users = mongo.db.booked_events.find({'event_id': event_id, 'username': {'$ne': username}})
-        other_users_bookings[event_id] = [[user['username'], user['email']] for user in other_users]
+        other_users_bookings[event_id] = [[user['username'], user['email'], user['carowner']] for user in other_users]
     bookings = mongo.db.booked_events.find({'username': username})
 
     return render_template('myevents.html', bookings=list(bookings), other_users_bookings=other_users_bookings)
