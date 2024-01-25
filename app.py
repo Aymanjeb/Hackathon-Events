@@ -153,9 +153,10 @@ def user_bookings():
     other_users_bookings = {}
     for event_id in event_ids:
         other_users = mongo.db.booked_events.find({'event_id': event_id, 'username': {'$ne': username}})
+        other_users_bookings[event_id] = []
         for user in other_users:
-            user_ = mongo.db.users.find_one({'username':user['username']})
-            other_users_bookings[event_id] = [user_['username'], user_['email'], user_['carowner']]
+            new_user = mongo.db.users.find_one({'username':user['username']})
+            other_users_bookings[event_id].append([new_user['username'], new_user['email'], new_user['carowner']])
     bookings = mongo.db.booked_events.find({'username': username})
 
     return render_template('myevents.html', bookings=list(bookings), other_users_bookings=other_users_bookings)
