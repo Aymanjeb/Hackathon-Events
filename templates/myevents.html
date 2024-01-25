@@ -19,11 +19,12 @@
                 <div class="collapse navbar-collapse" id="navbarNav">
                     <ul class="navbar-nav ml-auto">
                         {% if session.username %}
+                        <!-- User is logged in -->
                         <li class="nav-item">
                             <a class="nav-link" href="/">Accueil</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="/edit_profile">Modifier vos informations</a>
+                            <a class="nav-link" href="/user_bookings">Mes réservations</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="/book">Réserver un nouvel évènement</a>
@@ -32,6 +33,7 @@
                             <a class="nav-link" href="/logout">Déconnexion</a>
                         </li>
                         {% else %}
+                        <!-- User is not logged in -->
                         <li class="nav-item">
                             <a class="nav-link" href="/login">Connexion</a>
                         </li>
@@ -64,11 +66,7 @@
                     <p class="card-text">D'autres utilisateurs qui ont réservé le même évènement:</p>
                     <ul class="list-group list-group-flush">
                         {% for list in other_users_bookings[booking.event_id] %}
-                        <li class="list-group-item">{{ list[0] }} - Son adresse email est {{list[1]}}.
-                        {% if list[2]=="yes" %}<br>
-                        {{ list[0] }} possède une voiture, vous pouvez voir avec lui et faire un covoiturage.
-                        {% endif %}
-                        </li>
+                        <li class="list-group-item">{{ list[0] }}: {{list[1]}}</li>
                         {% endfor %}
                     </ul>
                     {% endif %}
