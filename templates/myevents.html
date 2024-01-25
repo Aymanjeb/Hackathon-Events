@@ -20,11 +20,12 @@
                 <div class="collapse navbar-collapse" id="navbarNav">
                     <ul class="navbar-nav ml-auto">
                         {% if session.username %}
+                        <!-- User is logged in -->
                         <li class="nav-item">
                             <a class="nav-link" href="/">Accueil</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="/edit_profile">Modifier vos informations</a>
+                            <a class="nav-link" href="/user_bookings">Mes réservations</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="/book">Réserver un nouvel évènement</a>
@@ -33,6 +34,7 @@
                             <a class="nav-link" href="/logout">Déconnexion</a>
                         </li>
                         {% else %}
+                        <!-- User is not logged in -->
                         <li class="nav-item">
                             <a class="nav-link" href="/login">Connexion</a>
                         </li>
