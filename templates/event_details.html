@@ -5,10 +5,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- Include Leaflet CSS -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
-    <!-- Your existing CSS links -->
-    <title>Details</title>
+    <title>Informations sur l'événement</title>
     <link rel="stylesheet" type="text/css" href="/static/css/event_details.css">
 
 
@@ -26,7 +24,6 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ml-auto">
                     {% if session.username %}
-                    <!-- User is logged in -->
                     <li class="nav-item">
                         <a class="nav-link" href="/">Acceuil</a>
                     </li>
@@ -40,7 +37,6 @@
                         <a class="nav-link" href="/logout">Déconnexion</a>
                     </li>
                     {% else %}
-                    <!-- User is not logged in -->
                     <li class="nav-item">
                         <a class="nav-link" href="/login">Connexion</a>
                     </li>
