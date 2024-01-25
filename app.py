@@ -43,7 +43,7 @@ def register():
 
         if existing_user is None:
             #hashpass = bcrypt.hashpw(request.form['password'].encode('utf-8'), bcrypt.gensalt())
-            users.insert_one({'username': request.form['username'], 'password': request.form['password']})
+            users.insert_one({'username': request.form['username'], 'password': request.form['password'], 'email': request.form['email']})
             session['username'] = request.form['username']
             session['email'] = request.form['email']
             return render_template('index.html')
