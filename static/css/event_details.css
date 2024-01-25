@@ -1,0 +1,21 @@
+.event-details-table {
+    margin-top: 20px; /* Add top margin */
+    background-color: #f8f9fa; /* Light background for the table */
+    border-radius: 8px; /* Rounded corners */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Slight shadow for depth */
+    overflow: hidden; /* Ensures the border-radius applies if there's a border */
+}
+
+.event-details-table th, .event-details-table td {
+    padding: 15px; /* More padding for table cells */
+}
+
+.event-details-table th {
+    background-color: #eca919; /* A blue background for headers */
+    color: white; /* White text for headers */
+}
+
+.map-container {
+    margin-top: 20px; /* Margin above the map */
+    margin-bottom: 20px; /* Margin below the map */
+}

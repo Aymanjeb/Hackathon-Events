@@ -1,12 +1,9 @@
-<!DOCTYPE html>
-<html lang="en">
 <head>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Your Page Title</title>
-    <link rel="stylesheet" type="text/css" href="/static/css/index.css">
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Add your additional CSS here or in index.css -->
+    <title>Mes réservations</title>
 </head>
 <body>
     <header class="navbar navbar-expand-lg navbar-light bg-light">
@@ -23,6 +20,9 @@
                     <ul class="navbar-nav ml-auto">
                         {% if session.username %}
                         <!-- User is logged in -->
+                        <li class="nav-item">
+                            <a class="nav-link" href="/">Accueil</a>
+                        </li>
                         <li class="nav-item">
                             <a class="nav-link" href="/user_bookings">Mes réservations</a>
                         </li>
@@ -47,21 +47,34 @@
             </div>
         </nav>
     </header>
-        
-    <main class="container mt-4">
-        <iframe src="https://data.nantesmetropole.fr/explore/embed/dataset/244400404_agenda-evenements-nantes-nantes-metropole/map/?disjunctive.emetteur&disjunctive.rubrique&disjunctive.lieu&disjunctive.ville&disjunctive.lieu_quartier&location=8,47.15097,-0.3024&basemap=jawg.streets&static=false&datasetcard=false&scrollWheelZoom=true" id="mapIframe"></iframe>  
-    </main>
 
-    <footer class="footer bg-dark text-white mt-4">
-        <div class="container text-center">
-            <h3>Bienvenu Dans Notre Site</h3>
-            <p>Explorez Nantes en toute simplicité grâce à notre site dédié aux étudiants.</p>
-            <p>Coordonnez-vous, restez informé et profitez au maximum des événements de la ville.</p>
-            <p>Votre hub pour une vie étudiante connectée et enrichie à Nantes.</p> 
+    <div class="container mt-4">
+        <h1 class="mb-3">Mes réservations</h1>
+        <div class="bookings-container">
+            {% for booking in bookings %}
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h2 class="card-title">{{ booking.event_id }} : {{booking.event_name}}
+                        <a href="/event_details/{{booking.event_id}}" class="btn btn-info btn-sm float-right">
+                            <i class="fas fa-info-circle"></i>
+                        </a>
+                        <a href="/delete/{{ booking.event_id }}" class="btn btn-danger btn-sm float-right">
+                            <i class="fas fa-trash-alt"></i>
+                        </a>
+                    </h2>
+                    {% if other_users_bookings[booking.event_id]!=[]%}
+                    <p class="card-text">D'autres utilisateurs qui ont réservé le même évènement:</p>
+                    <ul class="list-group list-group-flush">
+                        {% for list in other_users_bookings[booking.event_id] %}
+                        <li class="list-group-item">{{ list[0] }}: {{list[1]}}</li>
+                        {% endfor %}
+                    </ul>
+                    {% endif %}
+                </div>
+            </div>
+            {% else %}
+            <p>Aucune réservation trouvée.</p>
+            {% endfor %}
         </div>
-    </footer>
-
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-    <!-- Add your JavaScript here -->
+    </div>
 </body>
-</html>
