@@ -19,11 +19,12 @@
                 <div class="collapse navbar-collapse" id="navbarNav">
                     <ul class="navbar-nav ml-auto">
                         {% if session.username %}
+                        <!-- User is logged in -->
                         <li class="nav-item">
                             <a class="nav-link" href="/">Accueil</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="/edit_profile">Modifier vos informations</a>
+                            <a class="nav-link" href="/user_bookings">Mes réservations</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="/book">Réserver un nouvel évènement</a>
@@ -32,6 +33,7 @@
                             <a class="nav-link" href="/logout">Déconnexion</a>
                         </li>
                         {% else %}
+                        <!-- User is not logged in -->
                         <li class="nav-item">
                             <a class="nav-link" href="/login">Connexion</a>
                         </li>
@@ -52,11 +54,11 @@
             {% for booking in bookings %}
             <div class="card mb-3">
                 <div class="card-body">
-                    <h2 class="card-title">{{ booking.event_date }} : {{booking.event_name}}
-                        <a href="/event_details/{{booking.event_date}}" class="btn btn-info btn-sm float-right">
+                    <h2 class="card-title">{{ booking.event_id }} : {{booking.event_name}}
+                        <a href="/event_details/{{booking.event_id}}" class="btn btn-info btn-sm float-right">
                             <i class="fas fa-info-circle"></i>
                         </a>
-                        <a href="/delete/{{ booking.event_date }}" class="btn btn-danger btn-sm float-right">
+                        <a href="/delete/{{ booking.event_id }}" class="btn btn-danger btn-sm float-right">
                             <i class="fas fa-trash-alt"></i>
                         </a>
                     </h2>
@@ -64,11 +66,7 @@
                     <p class="card-text">D'autres utilisateurs qui ont réservé le même évènement:</p>
                     <ul class="list-group list-group-flush">
                         {% for list in other_users_bookings[booking.event_id] %}
-                        <li class="list-group-item">{{ list[0] }} - Son adresse email est {{list[1]}}.
-                        {% if list[2]=="yes" %}<br>
-                        {{ list[0] }} possède une voiture, vous pouvez voir avec lui et faire un covoiturage.
-                        {% endif %}
-                        </li>
+                        <li class="list-group-item">{{ list[0] }}: {{list[1]}}</li>
                         {% endfor %}
                     </ul>
                     {% endif %}
