@@ -2,4 +2,4 @@ flask
 requests
 pymongo
 flask_pymongo
-bcrypt
+flask_bcrypt
