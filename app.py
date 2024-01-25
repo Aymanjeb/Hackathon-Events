@@ -71,7 +71,7 @@ def edit_profile():
         users.update_one({'username': username}, {'$set': {'email': email, 'password': hashed_password, 'carowner':carowner}})
 
         flash('Profile updated successfully')
-        return redirect(url_for('edit_profile'))
+        return redirect(url_for('hello'))
 
     username = session['username']
     user = mongo.db.users.find_one({'username': username})

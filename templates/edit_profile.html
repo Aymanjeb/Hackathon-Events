@@ -6,6 +6,13 @@
 
 </head>
 <body>
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+      <script>
+          alert('{{ messages[0] }}');
+      </script>
+    {% endif %}
+    {% endwith %}
     <div class="edit-container">
         <h2>Modification Du Profile</h2>
         <form action="/edit_profile" method="post">
