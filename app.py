@@ -2,7 +2,7 @@ import os
 from flask import Flask, render_template, request, redirect, url_for, session, flash
 from flask_pymongo import PyMongo
 import requests
-#import bcrypt
+from flask_bcrypt import generate_password_hash
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = os.getenv('API_KEY')
@@ -42,8 +42,9 @@ def register():
         existing_user = users.find_one({'username': request.form['username']})
 
         if existing_user is None:
-            #hashpass = bcrypt.hashpw(request.form['password'].encode('utf-8'), bcrypt.gensalt())
-            users.insert_one({'username': request.form['username'], 'password': request.form['password'], 'email': request.form['email']})
+            password = request.form['password']
+            hashed_password=generate_password_hash(password)
+            users.insert_one({'username': request.form['username'], 'password': hashed_password, 'email': request.form['email']})
             session['username'] = request.form['username']
             session['email'] = request.form['email']
             return render_template('index.html')
@@ -51,6 +52,31 @@ def register():
         return redirect(url_for('choose_event'))
 
     return render_template('register.html')
+
+@app.route('/edit_profile', methods=['GET', 'POST'])
+def edit_profile():
+    if 'username' not in session:
+        return redirect(url_for('login'))  # Redirect to login if user not logged in
+
+    users = mongo.db.users
+    username = session['username'] # Cannot accept redundancies in username as it's unique in our DB
+    user = users.find_one({'username': username})
+    
+    if request.method == 'POST':
+        email = request.form['email']
+        password = request.form['password']
+        carowner = 'yes' in request.form
+        hashed_password=generate_password_hash(password)
+        users = mongo.db.users
+        users.update_one({'username': username}, {'$set': {'email': email, 'password': hashed_password, 'carowner':carowner}})
+
+        flash('Profile updated successfully')
+        return redirect(url_for('edit_profile'))
+
+    username = session['username']
+    user = mongo.db.users.find_one({'username': username})
+
+    return render_template('edit_profile.html', user=user)
 
 @app.route('/logout')
 def logout():
@@ -160,7 +186,6 @@ def event_details(event_id):
     else:
         return "Event not found", 404
 def get_event_details(event_id):
-
     url = "https://data.nantesmetropole.fr/api/explore/v2.1/catalog/datasets/244400404_agenda-evenements-nantes-nantes-metropole/records?select=*&where=%20date%20%3E%20now()&limit=100"
     params = {
     }
