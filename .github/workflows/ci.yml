@@ -39,8 +39,8 @@ jobs:
     #- name: Validate HTML
     #  run: html5validator --root . --ignore 'regex_to_ignore_errors'
 
-    #- name: Run unit tests
-     # run: python -m unittest tests/test_functionalities.py
+    - name: Run unit tests
+      run: python -m unittest tests/test_functionalities.py
   
   create-pr:
     needs: test
