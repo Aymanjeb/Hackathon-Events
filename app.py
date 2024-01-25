@@ -48,8 +48,8 @@ def register():
             session['username'] = request.form['username']
             session['email'] = request.form['email']
             return render_template('index.html')
-
-        return redirect(url_for('choose_event'))
+        
+        flash('Utilisateur déjà enregistré')
 
     return render_template('register.html')
 
@@ -154,9 +154,10 @@ def user_bookings():
     for event_id in event_ids:
         other_users = mongo.db.booked_events.find({'event_id': event_id, 'username': {'$ne': username}})
         other_users_bookings[event_id] = []
-        for user in other_users:
-            new_user = mongo.db.users.find_one({'username':user['username']})
-            other_users_bookings[event_id].append([new_user['username'], new_user['email'], new_user['carowner']])
+        if other_users:
+            for user in other_users:
+                new_user = mongo.db.users.find_one({'username':user['username']})
+                other_users_bookings[event_id].append([new_user['username'], new_user['email'], new_user['carowner']])
     bookings = mongo.db.booked_events.find({'username': username})
 
     return render_template('myevents.html', bookings=list(bookings), other_users_bookings=other_users_bookings)
