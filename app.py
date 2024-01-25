@@ -45,7 +45,7 @@ def register():
         if existing_user is None:
             password = request.form['password']
             hashed_password=generate_password_hash(password)
-            users.insert_one({'username': request.form['username'], 'password': hashed_password, 'email': request.form['email']})
+            users.insert_one({'username': request.form['username'], 'password': hashed_password, 'email': request.form['email'], 'carowner': request.form['carowner']})
             session['username'] = request.form['username']
             session['email'] = request.form['email']
             session['carowner'] = request.form['carowner']
@@ -67,7 +67,7 @@ def edit_profile():
     if request.method == 'POST':
         email = request.form['email']
         password = request.form['password']
-        carowner = 'yes' in request.form
+        carowner = request.form['carowner']
         hashed_password=generate_password_hash(password)
         users = mongo.db.users
         users.update_one({'username': username}, {'$set': {'email': email, 'password': hashed_password, 'carowner':carowner}})
