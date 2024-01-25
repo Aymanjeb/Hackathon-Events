@@ -161,9 +161,8 @@ def event_details(event_id):
         return "Event not found", 404
 def get_event_details(event_id):
 
-    url = "https://data.nantesmetropole.fr/api/explore/v2.1/catalog/datasets/244400404_agenda-evenements-nantes-nantes-metropole/records"
+    url = "https://data.nantesmetropole.fr/api/explore/v2.1/catalog/datasets/244400404_agenda-evenements-nantes-nantes-metropole/records?select=*&where=%20date%20%3E%20now()&limit=100"
     params = {
-        'limit' : 100
     }
     response = requests.get(url, params=params)
     if response.status_code == 200:
