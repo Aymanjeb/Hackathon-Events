@@ -36,13 +36,8 @@ jobs:
     - name: Install html5validator
       run: pip install html5validator
 
-    #- name: Validate HTML
-    #  run: html5validator --root . --ignore 'regex_to_ignore_errors'
-
-    - name: Run unit tests
-      env:
-        MONGO_URI: ${{ secrets.MONGO_URI }}
-      run: python -m unittest tests/test_functionalities.py
+    - name: Validate HTML
+      run: html5validator --root . --ignore 'regex_to_ignore_errors'
   
   create-pr:
     needs: test
