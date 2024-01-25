@@ -69,7 +69,6 @@ def choose_event():
 def fetch_events():
     url = "https://data.nantesmetropole.fr/api/explore/v2.1/catalog/datasets/244400404_agenda-evenements-nantes-nantes-metropole/records?select=*&where=%20date%20%3E%20now()&limit=100"
     params = {
-        'limit': 100
     }
     parsed_events = []
     response = requests.get(url, params=params)
@@ -86,7 +85,7 @@ def fetch_events():
                 'date' : event['date'],
                 # Add other event details you need
             })
-
+    
         return parsed_events
     else:
         return []
