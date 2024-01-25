@@ -19,11 +19,11 @@
             </div>
             <div class="form-group">
                 <label for="carowner">Possédez-vous une voiture et souhaitez-vous être contacté par une personne intéressée par le covoiturage ?</label>
-                <select id="carowner" name="carowner" value="{{ user.carowner }}">
-                    <option value="">Choisir...</option>
-                    <option value="yes">Oui</option>
-                    <option value="no">Non</option>
-                </select>
+            <select id="carowner" name="carowner">
+                <option value="yes" {% if user.carowner == 'yes' %}selected{% endif %}>Oui</option>
+                <option value="no" {% if user.carowner == 'no' %}selected{% endif %}>Non</option>
+            </select>
+
             </div>
             <div class="form-group">
                 <input type="submit" value="Sauvegarder les modifications">
