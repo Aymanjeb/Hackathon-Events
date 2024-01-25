@@ -112,7 +112,8 @@ def book_event():
     }
 
     mongo.db.booked_events.insert_one(booked_event)
-    return redirect(url_for('user_bookings'))
+    redirect(url_for('user_bookings'))
+    return "Event booked successfully", 200
 
 @app.route('/user_bookings')
 def user_bookings():
