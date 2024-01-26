@@ -23,7 +23,9 @@ def login():
         login_user = users.find_one({'username': request.form['username']})
 
         if login_user:
-            if login_user['password']==request.form['password']:
+            password = request.form['password']
+            hashed_password=generate_password_hash(password)
+            if login_user['password']==hashed_password:
                 session['username'] = request.form['username']
                 session['email'] = login_user['email']
 
