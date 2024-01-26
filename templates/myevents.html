@@ -72,7 +72,7 @@
                         {% for list in other_users_bookings[booking.event_id] %}
                         <li class="list-group-item">{{ list[0] }} - Son adresse email est {{list[1]}}.
                         {% if list[2]=="yes" %}<br>
-                        {{ list[0] }} possède une voiture, vous pouvez voir avec lui et faire un covoiturage.
+                        {{ list[0] }} possède une voiture, vous pouvez lui contacter pour un covoiturage.
                         {% endif %}
                         </li>
                         {% endfor %}
