@@ -23,9 +23,9 @@ def login():
         login_user = users.find_one({'username': request.form['username']})
 
         if login_user:
-            password = request.form['password']
-            hashed_password=generate_password_hash(password)
-            if login_user['password']==hashed_password:
+            #password = request.form['password']
+            #hashed_password=generate_password_hash(password)
+            if login_user['password']==request.form['password']:
                 session['username'] = request.form['username']
                 session['email'] = login_user['email']
 
@@ -44,9 +44,9 @@ def register():
         existing_user = users.find_one({'username': request.form['username']})
 
         if existing_user is None:
-            password = request.form['password']
-            hashed_password=generate_password_hash(password)
-            users.insert_one({'username': request.form['username'], 'password': hashed_password, 'email': request.form['email'], 'carowner': request.form['carowner']})
+            #password = request.form['password']
+            #hashed_password=generate_password_hash(password)
+            users.insert_one({'username': request.form['username'], 'password': request.form['password'], 'email': request.form['email'], 'carowner': request.form['carowner']})
             session['username'] = request.form['username']
             session['email'] = request.form['email']
             return render_template('index.html')
@@ -68,9 +68,9 @@ def edit_profile():
         email = request.form['email']
         password = request.form['password']
         carowner = request.form['carowner']
-        hashed_password=generate_password_hash(password)
+        #hashed_password=generate_password_hash(password)
         users = mongo.db.users
-        users.update_one({'username': username}, {'$set': {'email': email, 'password': hashed_password, 'carowner':carowner}})
+        users.update_one({'username': username}, {'$set': {'email': email, 'password': password, 'carowner':carowner}})
 
         flash('Profile updated successfully')
         return redirect(url_for('edit_profile'))
